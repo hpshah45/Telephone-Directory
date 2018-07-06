@@ -3,7 +3,7 @@
 
 #include <string>
 #include <cstddef>
-//#include<unordered_map>
+#include <unordered_map>
 
 using namespace std;
 
@@ -15,7 +15,7 @@ private:
 	char * address;*/
 	string lastName;// can arrange in ascending order.
 	string firstName;//Can make a class of Telephone directory and create 
-	string number;//think of a way to add more than 1 numbers
+	unordered_map<string, string> numbers;
 	string address;//think of converting this to char *
 	ContactDetails * next;//could add a previous as well.
 	ContactDetails * prev;
@@ -24,7 +24,7 @@ public:
 		this->lastName = "";
 		this->firstName = "";//what to do in case of multiple first names or last names
 		this->address = "";
-		this->number = "";
+		this->numbers = {{"Mobile", ""}, {"Home", ""}, {"Other", ""}};
 		this->next = NULL;
 		this->prev = NULL;
 	}

@@ -11,8 +11,13 @@ ContactDetails * ContactDetails::addContact(ContactDetails * first) {
 	cin >> this->lastName;
 	cout << "Enter the first name:" << endl;
 	cin >> this->firstName;
-	cout << "Enter the contact number details:" << endl;
-	cin >> this->number;
+	cout << "Enter the Mobile number:" << endl;
+	cin.ignore();
+	getline(cin, this->numbers["Mobile"]);
+	cout << "Enter the Home phone number:" << endl;
+	getline(cin, this->numbers["Home"]);
+	cout << "Enter any other number you have:" << endl;
+	getline(cin, this->numbers["Other"]);
 	cout << "Enter the address:" << endl;
 	cin >> this->address;
 
@@ -23,15 +28,11 @@ ContactDetails * ContactDetails::addContact(ContactDetails * first) {
 		ContactDetails * prev = first;
 		ContactDetails * temp = first;
 		while(temp) {
-			if((temp->firstName).compare(this->firstName) > 0) {
-				prev->next = this;
-				this->prev = prev;
-				break;
-			}
 			prev = temp;
 			temp = temp->next;
 		}
-	
+		prev->next = this;
+		this->prev = prev;	
 	}
 	return first;
 }
@@ -46,8 +47,11 @@ void ContactDetails::listAllContacts() {
 			
 	while(temp) {
 		cout << "First Name: " << temp->firstName << " Last Name: " << 
-		temp->lastName << " Contact Number: " << temp->number << " Address: " 
-		<< temp->address << endl;
+		temp->lastName; 
+		if (temp->numbers["Mobile"].length() != 0) cout << " Mobile Number: " << temp->numbers["Mobile"];
+		if (temp->numbers["Home"].length() != 0) cout << " Home Number: " << temp->numbers["Home"];
+		if (temp->numbers["Other"].length() != 0) cout << " Other Number: " << temp->numbers["Other"];
+		cout << " Address: " << temp->address << endl;
 		temp = temp->next;
 	}
 	
@@ -58,19 +62,29 @@ ContactDetails * ContactDetails::deleteContact() {
 	string contentToDel;
 	cout << "Please enter the name or the number which you want to delete:" << endl;
 	cin >> contentToDel;//Ask for user permission to delete.
-	if ((this->firstName == contentToDel) || (this->number == contentToDel) || (this->lastName == contentToDel)) {				
+	/*if ((this->firstName == contentToDel) || (this->number == contentToDel) || (this->lastName == contentToDel)) {				
 		ContactDetails * temp = this;
 		ContactDetails * temp2 = temp->next;
 		delete temp;
 		temp2->prev = NULL;
 		temp = NULL;
 		return temp2;			
-	}
-	ContactDetails * temp = searchContact(contentToDel, this);
-	if(temp) {
-		deleteThisContact(temp);
-	} else {
-		cout << "No such contact to delete." << endl;
+	}*/
+	cout << "Are you sure you want to delete the contact? Type 'Y' to proceed." << endl;
+	string choice;
+	cin >> choice;
+	if(choice == "Y") {
+		ContactDetails * temp = searchContact(contentToDel, this);
+		if(temp == this) {
+			ContactDetails * temp2 = this->next;
+			deleteThisContact(this);
+			return temp2;
+		}
+		if(temp) {
+			deleteThisContact(temp);
+		} else {
+			cout << "No such contact to delete." << endl;
+		}
 	}
 	return this;
 }
@@ -97,7 +111,8 @@ void ContactDetails::deleteThisContact(ContactDetails * temp) {
 ContactDetails * ContactDetails::searchContact(string contentToSearch, ContactDetails * first) {
 	while(first) {
 		if ((first->firstName == contentToSearch) || (first->lastName == contentToSearch) 
-	     	|| (first->number == contentToSearch)) {
+	     	|| (first->numbers["Mobile"] == contentToSearch) || (first->numbers["Home"] == contentToSearch)
+		|| (first->numbers["Other"] == contentToSearch)) {
 			return first;
 		}
 		first = first->next;	
@@ -202,7 +217,10 @@ void ContactDetails::updateNumber() {
 		cout << "Please enter the number that you would like to change to." << endl;
 		string updatedNumber = "";
 		cin >> updatedNumber;
-		temp->number = updatedNumber;
+		if(temp->numbers["Mobile"] == number) temp->numbers["Mobile"] = updatedNumber;
+		if(temp->numbers["Home"] == number) temp->numbers["Home"] = updatedNumber; 
+		if(temp->numbers["Other"] == number) temp->numbers["Other"] = updatedNumber;
+		//temp->number = updatedNumber;
 	}
 	else {
 		cout << "Sorry. No such contact found." << endl;
