@@ -42,7 +42,7 @@ public:
 	void updateNumber();
 	void updateAddress();
 	void displayContact(ContactDetails *);
-	vector<ContactDetails *> arrayOfSameContactDetails(ContactDetails * temp);
+	vector<ContactDetails *> arrayOfSameContactDetails(string, ContactDetails * temp);
 	int selectionForSameDetils(vector<ContactDetails *> );
 	
 };

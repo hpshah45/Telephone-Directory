@@ -88,7 +88,7 @@ ContactDetails * ContactDetails::deleteContact() {
 				deleteThisContact(sameDetails[0]);
 			}				
 		} else { //if there are multiple contacts with this detail.
-			int selection = selectionForSameDetils(sameDetails);
+			int selection = selectionForSameDetails(sameDetails);
 			cout << "Okay. Deleting the contact at index " << selection << " ." << endl;
 			if(sameDetails[selection - 1] == this) {
 				ContactDetails * temp2 = this->next;
@@ -114,7 +114,7 @@ vector<ContactDetails *> ContactDetails::arrayOfSameContactDetails(string conten
 		return sameDetails;
 }
 
-int ContactDetails::selectionForSameDetils(vector<ContactDetails *> sameDetails) {
+int ContactDetails::selectionForSameDetails(vector<ContactDetails *> sameDetails) {
 	cout << "There are multiple contacts with the same details." << endl;
 	cout << "Please specify which one would like to delete/update by specifying the index of that contact from the following contacts" << endl;
 	for(int i = 0; i < (sameDetails.size() - 1); i++) {
