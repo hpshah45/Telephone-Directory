@@ -4,6 +4,7 @@
 #include <string>
 #include <cstddef>
 #include <unordered_map>
+#include <vector>
 
 using namespace std;
 
@@ -40,6 +41,9 @@ public:
 	void updateLastName();
 	void updateNumber();
 	void updateAddress();
+	void displayContact(ContactDetails *);
+	vector<ContactDetails *> arrayOfSameContactDetails(string, ContactDetails * temp);
+	int selectionForSameDetils(vector<ContactDetails *> );
 	
 };
 

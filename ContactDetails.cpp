@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <cstring>
+#include <vector>
 
 using namespace std;
 
@@ -37,7 +38,7 @@ ContactDetails * ContactDetails::addContact(ContactDetails * first) {
 	return first;
 }
 
-void ContactDetails::listAllContacts() {
+void ContactDetails::listAllContacts() {// lists all the contacts
 	if (this == NULL) {
 		cout << "There are no contacts to display." << endl;
 		return;
@@ -46,47 +47,83 @@ void ContactDetails::listAllContacts() {
 	ContactDetails * temp = this;
 			
 	while(temp) {
-		cout << "First Name: " << temp->firstName << " Last Name: " << 
-		temp->lastName; 
+		displayContact(temp);
+		temp = temp->next;
+	}
+	return;
+}
+
+void ContactDetails::displayContact(ContactDetails * temp) {
+	if(temp) { //displays the contact for the given pointer
+		cout << "First Name: " << temp->firstName << " Last Name: " << temp->lastName; 
 		if (temp->numbers["Mobile"].length() != 0) cout << " Mobile Number: " << temp->numbers["Mobile"];
 		if (temp->numbers["Home"].length() != 0) cout << " Home Number: " << temp->numbers["Home"];
 		if (temp->numbers["Other"].length() != 0) cout << " Other Number: " << temp->numbers["Other"];
 		cout << " Address: " << temp->address << endl;
-		temp = temp->next;
+		return;
 	}
-	
 }
 
 
 ContactDetails * ContactDetails::deleteContact() {
+	//delete a contact given the details.
 	string contentToDel;
 	cout << "Please enter the name or the number which you want to delete:" << endl;
-	cin >> contentToDel;//Ask for user permission to delete.
-	/*if ((this->firstName == contentToDel) || (this->number == contentToDel) || (this->lastName == contentToDel)) {				
-		ContactDetails * temp = this;
-		ContactDetails * temp2 = temp->next;
-		delete temp;
-		temp2->prev = NULL;
-		temp = NULL;
-		return temp2;			
-	}*/
+	cin >> contentToDel;
 	cout << "Are you sure you want to delete the contact? Type 'Y' to proceed." << endl;
-	string choice;
+	string choice = "N";
 	cin >> choice;
 	if(choice == "Y") {
-		ContactDetails * temp = searchContact(contentToDel, this);
-		if(temp == this) {
-			ContactDetails * temp2 = this->next;
-			deleteThisContact(this);
-			return temp2;
-		}
-		if(temp) {
-			deleteThisContact(temp);
-		} else {
+		vector<ContactDetails *> sameDetails = arrayOfSameContactDetails(contentToDel, this);
+		if(sameDetails.size() == 1) { //in case there is no contact having this detail as having just 1 element means its a NULL pointer in case.
 			cout << "No such contact to delete." << endl;
+		}
+		else if(sameDetails.size() == 2) { //just have 1 contact with this detail.
+			if(sameDetails[0] == this) { //if the contact is the first contact in the list. need to update first.
+				ContactDetails * temp2 = this->next;
+				deleteThisContact(this);
+				return temp2;
+			}
+			if(sameDetails[0]) { //other than first.
+				deleteThisContact(sameDetails[0]);
+			}				
+		} else { //if there are multiple contacts with this detail.
+			int selection = selectionForSameDetils(sameDetails);
+			cout << "Okay. Deleting the contact at index " << selection << " ." << endl;
+			if(sameDetails[selection - 1] == this) {
+				ContactDetails * temp2 = this->next;
+				deleteThisContact(this);
+				return temp2;
+			}
+			if(sameDetails[selection - 1]) {
+				deleteThisContact(sameDetails[selection - 1]);
+			}
 		}
 	}
 	return this;
+}
+
+vector<ContactDetails *> ContactDetails::arrayOfSameContactDetails(string contentToSearch, ContactDetails * first) {
+		ContactDetails * temp = searchContact(contentToSearch, first);
+		vector<ContactDetails *> sameDetails;
+		sameDetails.push_back(temp);
+		while(sameDetails[sameDetails.size() - 1] != NULL) {
+			temp = searchContact(contentToSearch, (sameDetails[sameDetails.size() - 1])->next);
+			sameDetails.push_back(temp);
+		}
+		return sameDetails;
+}
+
+int ContactDetails::selectionForSameDetils(vector<ContactDetails *> sameDetails) {
+	cout << "There are multiple contacts with the same details." << endl;
+	cout << "Please specify which one would like to delete/update by specifying the index of that contact from the following contacts" << endl;
+	for(int i = 0; i < (sameDetails.size() - 1); i++) {
+		cout << i+1 << ". ";
+		displayContact(sameDetails[i]);
+	}
+	int selection = 0;
+	cin >> selection;
+	return selection;
 }
 
 void ContactDetails::deleteThisContact(ContactDetails * temp) {
@@ -104,6 +141,7 @@ void ContactDetails::deleteThisContact(ContactDetails * temp) {
 	}
 	else {
 		//something to write.
+		cout << "Cannot delete the contact." << endl;
 	}
 	return;
 }
@@ -219,8 +257,7 @@ void ContactDetails::updateNumber() {
 		cin >> updatedNumber;
 		if(temp->numbers["Mobile"] == number) temp->numbers["Mobile"] = updatedNumber;
 		if(temp->numbers["Home"] == number) temp->numbers["Home"] = updatedNumber; 
-		if(temp->numbers["Other"] == number) temp->numbers["Other"] = updatedNumber;
-		//temp->number = updatedNumber;
+		if(temp->numbers["Other"] == number) temp->numbers["Other"] = updatedNumber;	
 	}
 	else {
 		cout << "Sorry. No such contact found." << endl;

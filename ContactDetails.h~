@@ -4,6 +4,7 @@
 #include <string>
 #include <cstddef>
 #include <unordered_map>
+#include <vector>
 
 using namespace std;
 
@@ -17,7 +18,7 @@ private:
 	string firstName;//Can make a class of Telephone directory and create 
 	unordered_map<string, string> numbers;
 	string address;//think of converting this to char *
-	ContactDetails * next;//could add a previous as well.
+	ContactDetails * next;
 	ContactDetails * prev;
 public:
 	ContactDetails() {
@@ -40,6 +41,9 @@ public:
 	void updateLastName();
 	void updateNumber();
 	void updateAddress();
+	void displayContact(ContactDetails *);
+	vector<ContactDetails *> arrayOfSameContactDetails(ContactDetails * temp);
+	int selectionForSameDetils(vector<ContactDetails *> );
 	
 };
 
