@@ -89,7 +89,11 @@ ContactDetails * ContactDetails::deleteContact() {
 			}				
 		} else { //if there are multiple contacts with this detail.
 			int selection = selectionForSameDetails(sameDetails);
-			cout << "Okay. Deleting the contact at index " << selection << " ." << endl;
+			if(selection > sameDetails.size()) {
+				cout << "Please choose a valid index." << endl;
+				return this;
+			}
+			cout << "Okay. Deleting the contact at index " << selection << " ." << endl;//check the value of selection.
 			if(sameDetails[selection - 1] == this) {
 				ContactDetails * temp2 = this->next;
 				deleteThisContact(this);
@@ -150,7 +154,7 @@ ContactDetails * ContactDetails::searchContact(string contentToSearch, ContactDe
 	while(first) {
 		if ((first->firstName == contentToSearch) || (first->lastName == contentToSearch) 
 	     	|| (first->numbers["Mobile"] == contentToSearch) || (first->numbers["Home"] == contentToSearch)
-		|| (first->numbers["Other"] == contentToSearch)) {
+		|| (first->numbers["Other"] == contentToSearch) || (first->address == contentToSearch)) {
 			return first;
 		}
 		first = first->next;	
@@ -191,25 +195,57 @@ void ContactDetails::updateContact() {
 	<< "4. Address." << endl;
 
 	cin >> choice;
-	switch(choice) {
-		case 1:
-			this->updateFirstName();
-			break;
-		case 2:
-			this->updateLastName();
-			break;
-		case 3:
-			updateNumber();
-			break;
-		case 4:
-			updateAddress();
-			break;
-		default:
-			cout << "Please enter a valid choice." << endl;
+
+	if(choice >= 1 && choice <=4) {
+		this->update(choice);	
+	} else {
+		cout << "Please enter a valid choice between 1 and 4." << endl;
 	}
 }
 
-void ContactDetails::updateFirstName() {
+void ContactDetails::update(int choice) {
+	string detailToUpdate = "";
+	cout << "Please enter the detail that you would like to update." << endl;
+	cin >> detailToUpdate;
+
+	vector<ContactDetails *> sameDetails = arrayOfSameContactDetails(detailToUpdate, this);
+	if (sameDetails.size() == 1) {
+		cout << "No such contact to update." << endl;
+		return;
+	} 
+	
+	int selection = 1;
+	if(sameDetails.size() > 2) {
+		selection = selectionForSameDetails(sameDetails);
+	}
+	if(selection > sameDetails.size()) {
+		cout << "Please choose a valid index." << endl;
+		return;	
+	}
+	string updatedDetail = "";
+	cout << "Enter the updated detail." << endl;
+	cin >> updatedDetail;
+	updateDetails(sameDetails[selection - 1], updatedDetail, choice, detailToUpdate);
+}
+
+void ContactDetails::updateDetails(ContactDetails * contactToUpdate, string updatedDetail, int choice, string detailToUpdate) {
+	if(contactToUpdate) {
+		if (choice == 1) contactToUpdate->firstName = updatedDetail;
+		else if (choice == 2) contactToUpdate->lastName = updatedDetail;
+		else if (choice == 3) {
+			if(contactToUpdate->numbers["Mobile"] == detailToUpdate) contactToUpdate->numbers["Mobile"] = updatedDetail;
+			else if(contactToUpdate->numbers["Home"] == detailToUpdate) contactToUpdate->numbers["Home"] = updatedDetail;
+			else if(contactToUpdate->numbers["Other"] == detailToUpdate) contactToUpdate->numbers["Other"] = updatedDetail;
+		}
+		else if (choice == 4) contactToUpdate->address = updatedDetail;
+		return;
+	}
+	else {
+		cout << "Error finding contact." << endl;
+	}
+}
+
+/*void ContactDetails::updateFirstName() {
 	string firstName = "";
 	cout << "Please enter the first name of the contact you would like to change." << endl;
 	cin >> firstName;
@@ -282,4 +318,4 @@ void ContactDetails::updateAddress() {
 	}
 
 	return;
-}	
+}*/	

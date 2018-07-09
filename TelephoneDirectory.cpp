@@ -37,6 +37,8 @@ int main() {
 	case 5:
 		first->updateContact();
 		break;
+	case 6:
+		break;
 	default:
 		cout << "Please enter a valid choice between 1 and 6." << endl;
 		break; 

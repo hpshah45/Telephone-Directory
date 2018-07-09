@@ -37,14 +37,16 @@ public:
 	void listAllContacts();
 	ContactDetails * deleteAllContacts();
 	void updateContact();
-	void updateFirstName(); // all the updates can be done in one function.
-	void updateLastName();
-	void updateNumber();
-	void updateAddress();
+	//void updateFirstName(); // all the updates can be done in one function.
+	//void updateLastName();
+	//void updateNumber();
+	//void updateAddress();
 	void displayContact(ContactDetails *);
 	vector<ContactDetails *> arrayOfSameContactDetails(string, ContactDetails * temp);
-	int selectionForSameDetils(vector<ContactDetails *> );
-	
+	int selectionForSameDetails(vector<ContactDetails *> );
+	void update(int);
+	void updateDetails(ContactDetails *, string, int, string)
+
 };
 
 #endif
