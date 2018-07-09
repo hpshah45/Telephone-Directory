@@ -44,7 +44,6 @@ int main() {
 		break; 
 	}
 	} while(choice != 6); 
-	// write code to delete memory of all the contacts
 	delete first;
 	return 0;
 }

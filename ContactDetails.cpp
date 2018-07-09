@@ -6,7 +6,7 @@
 
 using namespace std;
 
-ContactDetails * ContactDetails::addContact(ContactDetails * first) {
+ContactDetails * ContactDetails::addContact(ContactDetails * first) {// to add a new contact
 	cout << "Enter the following details for adding the new contact:" << endl;
 	cout << "Enter the last name:" << endl;
 	cin >> this->lastName;
@@ -73,9 +73,9 @@ ContactDetails * ContactDetails::deleteContact() {
 	cout << "Are you sure you want to delete the contact? Type 'Y' to proceed." << endl;
 	string choice = "N";
 	cin >> choice;
-	if(choice == "Y") {
+	if(choice == "Y") {// asking for user permission
 		vector<ContactDetails *> sameDetails = arrayOfSameContactDetails(contentToDel, this);
-		if(sameDetails.size() == 1) { //in case there is no contact having this detail as having just 1 element means its a NULL pointer in case.
+		if(sameDetails.size() == 1) { //in case there is no contact having this detail as having just 1 element means its a NULL pointer.
 			cout << "No such contact to delete." << endl;
 		}
 		else if(sameDetails.size() == 2) { //just have 1 contact with this detail.
@@ -107,7 +107,7 @@ ContactDetails * ContactDetails::deleteContact() {
 	return this;
 }
 
-vector<ContactDetails *> ContactDetails::arrayOfSameContactDetails(string contentToSearch, ContactDetails * first) {
+vector<ContactDetails *> ContactDetails::arrayOfSameContactDetails(string contentToSearch, ContactDetails * first) {// making a vector of the contacts having the same details.
 		ContactDetails * temp = searchContact(contentToSearch, first);
 		vector<ContactDetails *> sameDetails;
 		sameDetails.push_back(temp);
@@ -118,7 +118,7 @@ vector<ContactDetails *> ContactDetails::arrayOfSameContactDetails(string conten
 		return sameDetails;
 }
 
-int ContactDetails::selectionForSameDetails(vector<ContactDetails *> sameDetails) {
+int ContactDetails::selectionForSameDetails(vector<ContactDetails *> sameDetails) {// for selection of contact from multiple contact stored in the vector
 	cout << "There are multiple contacts with the same details." << endl;
 	cout << "Please specify which one would like to delete/update by specifying the index of that contact from the following contacts" << endl;
 	for(int i = 0; i < (sameDetails.size() - 1); i++) {
@@ -130,7 +130,7 @@ int ContactDetails::selectionForSameDetails(vector<ContactDetails *> sameDetails
 	return selection;
 }
 
-void ContactDetails::deleteThisContact(ContactDetails * temp) {
+void ContactDetails::deleteThisContact(ContactDetails * temp) {// deletes the contact for which the pointer is given.
 	if(temp) {
 		if(temp->prev) {	
 			temp->prev->next = temp->next;
@@ -144,13 +144,12 @@ void ContactDetails::deleteThisContact(ContactDetails * temp) {
 		temp = NULL;
 	}
 	else {
-		//something to write.
 		cout << "Cannot delete the contact." << endl;
 	}
 	return;
 }
 
-ContactDetails * ContactDetails::searchContact(string contentToSearch, ContactDetails * first) {
+ContactDetails * ContactDetails::searchContact(string contentToSearch, ContactDetails * first) {//search for the contact.
 	while(first) {
 		if ((first->firstName == contentToSearch) || (first->lastName == contentToSearch) 
 	     	|| (first->numbers["Mobile"] == contentToSearch) || (first->numbers["Home"] == contentToSearch)
@@ -162,7 +161,7 @@ ContactDetails * ContactDetails::searchContact(string contentToSearch, ContactDe
 	return NULL;
 }
 
-ContactDetails * ContactDetails::deleteAllContacts() {
+ContactDetails * ContactDetails::deleteAllContacts() {//deletes all the contacts.
 	if(this == NULL) {	
 		cout << "There are no contacts in the directory to be deleted." << endl;
 		return this;	
@@ -186,7 +185,7 @@ ContactDetails * ContactDetails::deleteAllContacts() {
 	}
 }
 
-void ContactDetails::updateContact() {
+void ContactDetails::updateContact() {//to update a contact
 	int choice = 5;
 	cout << "What would you like to update?" << endl
 	<< "1. First Name." << endl
@@ -208,17 +207,17 @@ void ContactDetails::update(int choice) {
 	cout << "Please enter the detail that you would like to update." << endl;
 	cin >> detailToUpdate;
 
-	vector<ContactDetails *> sameDetails = arrayOfSameContactDetails(detailToUpdate, this);
-	if (sameDetails.size() == 1) {
+	vector<ContactDetails *> sameDetails = arrayOfSameContactDetails(detailToUpdate, this);//get the vector for the contacts having the same detail.
+	if (sameDetails.size() == 1) {//in case there is no contact for the given detail.
 		cout << "No such contact to update." << endl;
 		return;
 	} 
 	
 	int selection = 1;
-	if(sameDetails.size() > 2) {
+	if(sameDetails.size() > 2) {//if there are multiple contacts having the same detail, need a selection for it.
 		selection = selectionForSameDetails(sameDetails);
 	}
-	if(selection > sameDetails.size()) {
+	if(selection > sameDetails.size()) {// if the slection is out of bound.
 		cout << "Please choose a valid index." << endl;
 		return;	
 	}
@@ -228,7 +227,7 @@ void ContactDetails::update(int choice) {
 	updateDetails(sameDetails[selection - 1], updatedDetail, choice, detailToUpdate);
 }
 
-void ContactDetails::updateDetails(ContactDetails * contactToUpdate, string updatedDetail, int choice, string detailToUpdate) {
+void ContactDetails::updateDetails(ContactDetails * contactToUpdate, string updatedDetail, int choice, string detailToUpdate) {//where actual updation happens given the pointer to the contact.
 	if(contactToUpdate) {
 		if (choice == 1) contactToUpdate->firstName = updatedDetail;
 		else if (choice == 2) contactToUpdate->lastName = updatedDetail;
